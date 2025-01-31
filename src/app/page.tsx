@@ -1,13 +1,18 @@
-import Image from "next/image";
-import { prisma } from "../../lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]/route";
+import { User } from "./User";
+import { LoginButton, LogOutButton } from "./auth";
 
 export default async function Home() {
-    const user = await prisma.user.findFirst({
-        where: { email: "test@test.com" },
-    });
+    const session = await getServerSession(authOptions);
     return (
         <main>
-            <h1>Hello {user?.name}</h1>
+            <LoginButton />
+            <LogOutButton />
+            <h2>Server Session</h2>
+            <p>{JSON.stringify(session)}</p>
+            <h2>Client Session</h2>
+            <User />
         </main>
     );
 }
